@@ -53,6 +53,7 @@ export default function LoginPage() {
             <div className="mb-1 text-lg font-bold">Check your email</div>
             <p className="text-sm text-text-muted">
               We sent a magic sign-in link to <span className="text-text">{email}</span>.
+              Open it on this device to finish signing in.
             </p>
           </div>
         ) : (
