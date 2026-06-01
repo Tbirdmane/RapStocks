@@ -64,6 +64,25 @@ Logins won't work until Supabase trusts your Vercel URL.
 > nothing changes here per-deploy. Email magic links work as soon as the two
 > URLs above are saved.
 
+### 4b. Make email links work on phones (required)
+Out of the box, magic links break on mobile (they open in the email app's
+in-app browser and the sign-in loops). To fix it, point Supabase's email links
+at the app's `/auth/confirm` route. In **Supabase → Authentication → Email
+Templates**, edit two templates:
+
+**Magic Link** — replace the link line with:
+```html
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email">Log in</a>
+```
+
+**Confirm signup** — replace the link line with:
+```html
+<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup">Confirm your email</a>
+```
+
+Click **Save** on each. (Make sure your **Site URL** from step 4 is your real
+Vercel URL — these links are built from it.)
+
 ---
 
 ## 5. Set NEXT_PUBLIC_SITE_URL and redeploy
