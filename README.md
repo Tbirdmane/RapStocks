@@ -102,10 +102,12 @@ it updates existing artists by handle and never resets their share counts.
 ---
 
 ## Deploying to Vercel (later)
-1. Push this repo to GitHub.
+See **`DEPLOY.md`** for a full, click-by-click walkthrough written for a
+non-technical founder. The short version:
+1. Merge your code into `main` on GitHub.
 2. In Vercel: **New Project** → import the repo.
 3. Add the same env vars from `.env.local` in Vercel's project settings.
-4. Update Supabase **Site URL** to your Vercel domain.
+4. Update Supabase **Site URL** + **Redirect URLs** to your Vercel domain.
 5. Deploy.
 
 ---
