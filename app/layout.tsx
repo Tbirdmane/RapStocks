@@ -3,7 +3,12 @@ import "./globals.css";
 import { APP_NAME } from "@/lib/config";
 import { BottomNav } from "@/components/BottomNav";
 
+// Used so icons/manifest/OG links resolve to absolute URLs on your real
+// domain. Set NEXT_PUBLIC_SITE_URL in Vercel; falls back to localhost in dev.
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: APP_NAME,
   description: `${APP_NAME} — draft the next big rapper before they blow up.`,
   manifest: "/manifest.webmanifest",
