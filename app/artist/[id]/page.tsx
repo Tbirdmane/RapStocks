@@ -7,6 +7,7 @@ import { CURRENCY_NAME } from "@/lib/config";
 import { formatPrice, formatCount, formatCoinsShort } from "@/lib/format";
 import { Card, CoinPill } from "@/components/ui";
 import { TradePanel } from "@/components/TradePanel";
+import { LineChart } from "@/components/LineChart";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,14 @@ export default async function ArtistPage({ params }: { params: { id: string } })
     .eq("artist_id", params.id)
     .eq("user_id", profile.id)
     .maybeSingle();
+
+  const { data: history } = await supabase
+    .from("price_history")
+    .select("price")
+    .eq("artist_id", params.id)
+    .order("captured_at", { ascending: true })
+    .limit(120);
+  const priceSeries = (history ?? []).map((h) => Number(h.price));
 
   const price = spotPrice({
     basePrice: Number(artist.base_price),
@@ -107,9 +116,12 @@ export default async function ArtistPage({ params }: { params: { id: string } })
         </Card>
       )}
 
-      {/* Price chart placeholder — wired up in step 7. */}
-      <Card className="mb-4 flex h-28 items-center justify-center text-xs text-text-faint">
-        Price chart coming next
+      {/* Price history */}
+      <Card className="mb-4 p-3">
+        <div className="mb-1 text-xs font-bold uppercase tracking-wide text-text-faint">
+          Price history
+        </div>
+        <LineChart points={priceSeries} height={110} />
       </Card>
 
       <TradePanel

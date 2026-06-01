@@ -14,12 +14,18 @@ questions. v1 scope only — nothing here adds features beyond the spec.
 - [x] **Step 5** — Server-side trade action (`app/market/actions.ts`) +
       atomic `apply_trade` DB function.
 - [x] **Step 6** — Market list (search) + artist detail + buy/sell UI.
-      **>>> PAUSED HERE for you to confirm trading works end-to-end.**
-- [ ] Step 7 — Portfolio page + P/L + price-history chart.
-- [ ] Step 8 — Admin screen + settlement logic.
-- [ ] Step 9 — Friends + leaderboard + you-vs-friends weekly.
-- [ ] Step 10 — Share-card OG image route + button.
-- [ ] Step 11 — PWA manifest + icons + mobile polish.
+- [x] **Step 7** — Portfolio page + P/L + price-history chart (dependency-free
+      SVG `LineChart`). Daily portfolio snapshots drive weekly change.
+- [x] **Step 8** — Admin screen + atomic `run_settlement` DB function (enter
+      listeners → shift curves → record auditable results → price_history).
+- [x] **Step 9** — Friends (add by handle, accept/decline, unfriend),
+      global leaderboard, you-vs-friends weekly ranking.
+- [x] **Step 10** — Share-card OG image route (`/api/share-card`, 1080×1350)
+      + button on the portfolio page.
+- [x] **Step 11** — PWA manifest + generated icons (`scripts/generate-icons.mjs`)
+      + sign-out + admin link + mobile-first polish throughout.
+
+All 11 steps complete. `npm run build` passes; 9/9 AMM unit tests pass.
 
 ## Decisions (simplest option that ships)
 - **Atomicity:** trades apply through a Postgres function (`apply_trade`) so
@@ -41,9 +47,17 @@ questions. v1 scope only — nothing here adds features beyond the spec.
   action (`getQuote`) — the client never computes price, per the guardrail.
 - **Admin gate:** by handle via `ADMIN_HANDLES` env var (comma-separated). No
   separate roles table in v1.
-- **Charts:** placeholder on the artist page for now; lightweight chart lib
-  picked in step 7 (leaning toward a tiny dependency-free SVG sparkline to stay
-  on free tiers and keep bundle small — will confirm in step 7).
+- **Charts:** shipped a tiny **dependency-free SVG `LineChart`** (no chart lib)
+  to keep the bundle small and stay comfortably on free tiers. Used on the
+  artist page (price history) and portfolio (value over time).
+- **"Called it" badge:** triggers when any single holding is up **≥ 50%**
+  (`BIG_WIN_PCT` in `lib/portfolio.ts`). Tweak there.
+- **Share card auth:** `/api/share-card` identifies the player from their
+  session cookie and computes the portfolio with the service role. Signed-out
+  hits render a neutral fallback card rather than erroring.
+- **Weekly change:** derived from `portfolio_snapshots`, written at most once
+  per player per day when they open their portfolio. Until ~7 days of history
+  exist it compares against the earliest snapshot and labels it "building."
 - **Money display:** Clout shown as whole numbers (no decimals); per-share
   price shown with 2 decimals.
 

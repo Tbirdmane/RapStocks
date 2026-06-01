@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   description: `${APP_NAME} — draft the next big rapper before they blow up.`,
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: APP_NAME },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {

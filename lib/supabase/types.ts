@@ -136,7 +136,12 @@ export type Database = {
         Returns: number;
       };
       run_settlement: {
-        Args: { p_notes: string | null; p_entries: unknown };
+        Args: {
+          p_notes: string | null;
+          p_entries: unknown;
+          p_sensitivity?: number;
+          p_max_move?: number;
+        };
         Returns: string;
       };
     };

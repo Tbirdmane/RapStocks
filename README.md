@@ -28,11 +28,11 @@ maker. **No real money, ever.**
 
 ### 2. Run the database migration
 1. In Supabase, open **SQL Editor** (left sidebar) → **New query**.
-2. Open the file `supabase/migrations/0001_init.sql` from this repo, copy ALL
-   of it, paste into the editor, and click **Run**. This creates every table
-   and turns on security.
-3. Do the same with `supabase/migrations/0002_trade_fn.sql` (the trade engine).
-   Run them **in order**: `0001` first, then `0002`.
+2. Run the migration files in `supabase/migrations/` **in order**, one at a
+   time — open each, copy ALL of it, paste into the editor, click **Run**:
+   - `0001_init.sql` — every table + security (Row Level Security).
+   - `0002_trade_fn.sql` — the atomic trade engine.
+   - `0003_settlement_fn.sql` — the settlement ("earnings day") engine.
 
 ### 3. Grab your keys
 1. In Supabase, go to **Project Settings → API**.
@@ -77,6 +77,19 @@ it updates existing artists by handle and never resets their share counts.
 
 ---
 
+## Running the game day-to-day (you, the admin)
+- Make sure your handle is listed in `ADMIN_HANDLES` (in `.env.local`, and in
+  Vercel once deployed). Then an **Admin** link appears at the bottom of your
+  Portfolio page.
+- **Settlements ("earnings day"):** open **Admin**, type each artist's latest
+  monthly-listener number, add an optional note, and hit **Run settlement**.
+  Every artist's price curve shifts based on their growth (capped at ±25% per
+  run), instantly re-valuing everyone's holdings. Each run is logged with
+  before/after numbers so you can show the price-spike history later.
+- **Share card:** players tap "Get my share card" on their Portfolio to open a
+  ready-to-post 1080×1350 image of their stats. They save it and post to
+  TikTok/Instagram.
+
 ## Useful commands
 | Command | What it does |
 |---|---|
@@ -84,6 +97,7 @@ it updates existing artists by handle and never resets their share counts.
 | `npm run seed` | Insert/update artists from `scripts/seed.ts` |
 | `npm run test` | Run the pricing-math unit tests |
 | `npm run build` | Production build (what Vercel runs) |
+| `node scripts/generate-icons.mjs` | Regenerate the app/PWA icons (only if you reskin) |
 
 ---
 
